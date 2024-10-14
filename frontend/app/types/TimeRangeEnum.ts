@@ -1,0 +1,15 @@
+export enum TimeRangeEnum {
+    FifteenMinutes = "15m",
+    ThirtyMinutes = "30m",
+    OneHour = "1h",
+    ThreeHours = "3h",
+    SixHours = "6h",
+    TwelveHours = "12h",
+    OneDay = "1d",
+    TwoDays = "2d",
+    ThreeDays = "3d",
+    SevenDays = "7d",
+    OneWeek = "1w",
+    ThreeWeeks = "3w",
+    FourWeeks = "4w",
+}

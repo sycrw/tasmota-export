@@ -1,0 +1,53 @@
+services:
+  mosquitto:
+    image:	eclipse-mosquitto
+    container_name: mosquitto
+    ports:
+      - 1883:1883
+    volumes:
+      - /etc/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+
+  influxdb:
+    image: influxdb
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - influxdb-storage:/var/lib/influxdb2
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE:
+      DOCKER_INFLUXDB_INIT_USERNAME:
+      DOCKER_INFLUXDB_INIT_PASSWORD:
+      DOCKER_INFLUXDB_INIT_ORG:
+      DOCKER_INFLUXDB_INIT_BUCKET:
+
+  backfill:
+    image: localhost:5000/tasmota-backfill
+    container_name: backfill
+    depends_on:
+      - influxdb
+      - mosquitto
+    environment:
+      MQTT_BROKER_HOST:
+      MQTT_BROKER_PORT:
+      INFLUX_DB_HOST:
+      INFLUX_DB_TOKEN:
+      INFLUX_DB_ORG:
+      INFLUX_DB_BUCKET:
+
+  frontend:
+    image: localhost:5000/tasmota-frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - influxdb
+    environment:
+      APP_URL:
+      INFLUX_DB_URL:
+      INFLUX_DB_TOKEN:
+      INFLUX_DB_ORG:
+
+volumes:
+  influxdb-storage:
+  grafana-storage:
